@@ -6,13 +6,15 @@ let bodyParser = require('body-parser');
 const cors = require("cors");
 const multer = require('multer');
 const fs= require('fs')
-
-
+const http = require('http');
+const port = process.env.PORT
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connected!'))
-app.listen(process.env.PORT)
-console.log(`Listen port ${process.env.PORT}`)
+const server = http.createServer(app);
 
+server.listen(process.env.PORT, () => {
+  console.log(`Server ishga tushdi: http://localhost:${port}`);
+});
 
 app.use(cors({
   origin: '*',
