@@ -1,30 +1,20 @@
 const express = require('express')
 require('dotenv').config()
-const https = require('https');
 const mongoose = require('mongoose');
 const app = express()
 let bodyParser = require('body-parser');
 const cors = require("cors");
 const multer = require('multer');
 const fs= require('fs')
-const http = require('http');
 const port = process.env.PORT
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connected!'))
 
 
-const privateKey = fs.readFileSync('private.key', 'utf8');
-const certificate = fs.readFileSync('public.cert', 'utf8');
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-  // secureOptions: crypto.constants.SSL_OP_NO_TLSv1 | crypto.constants.SSL_OP_NO_TLSv1_1,
-  // Add other SSL options as needed
-};
 
-const server = https.createServer(credentials, app);
-server.listen(port, () => {
-  console.log(`Server is running on https://localhost:${port}`);
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
 app.use(cors({
   origin: '*',
