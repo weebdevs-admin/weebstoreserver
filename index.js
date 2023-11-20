@@ -2,22 +2,15 @@ const express = require('express')
 require('dotenv').config()
 const mongoose = require('mongoose');
 const app = express()
-let bodyParser = require('body-parser');
 const cors = require("cors");
 const multer = require('multer');
-const fs= require('fs')
+const fs = require('fs')
 const port = process.env.PORT
+
+
+app.use(cors());
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connected!'))
-
-
-  app.use(cors({
-    origin: '*',  // client manzili
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,  // ma'lumotlarni almashish (cookie, HTTP authentication) yo'qotmagan
-    optionsSuccessStatus: 204,
-    allowedHeaders: 'Content-Type,Authorization',
-  }));
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
@@ -41,7 +34,7 @@ const upload = multer({
       // To'g'ri formatlar uchun `null`, aks holda `new Error('Xatolik matn')`
       cb(null, true);
     } else {
-      cb(new Error("Not a valid field")); 
+      cb(new Error("Not a valid field"));
     }
   },
 });
@@ -55,9 +48,13 @@ app.delete('/delete-image/:imageName', (req, res) => {
   fs.unlink(imagePath, (err) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ message: 'Rasmni o\'chirishda xatolik yuz berdi' });
+      res.status(500).json({
+        message: 'Rasmni o\'chirishda xatolik yuz berdi'
+      });
     } else {
-      res.json({ message: 'Rasm muvaffaqiyatli o\'chirildi' });
+      res.json({
+        message: 'Rasm muvaffaqiyatli o\'chirildi'
+      });
     }
   });
 });
@@ -73,10 +70,14 @@ app.use('/uploads', express.static('uploads'));
 
 app.post('/upload', upload.single('file'), (req, res) => {
   // Fayl muvaffaqiyatli yuklandi
-  res.json({ message: 'Fayl muvaffaqiyatli yuklandi' });
+  res.json({
+    message: 'Fayl muvaffaqiyatli yuklandi'
+  });
 });
 //BODY PARSER
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({
+  limit: '50mb'
+}));
 app.use(express.urlencoded({
   limit: '50mb',
   extended: true
@@ -102,10 +103,14 @@ app.get('/image-names', (req, res) => {
   fs.readdir('uploads/', (err, files) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ message: 'Error reading directory' });
+      res.status(500).json({
+        message: 'Error reading directory'
+      });
     } else {
       // Send the list of filenames as a response
-      res.json({ filenames: files });
+      res.json({
+        filenames: files
+      });
     }
   });
 });
@@ -124,17 +129,17 @@ const LogoRouteRoute = require('./Routes/Logo.route')
 const MainPageRoute = require('./Routes/MainPage.route');
 const LoginRoute = require('./Routes/Login.route');
 
-app.use('/user',RegisterRoute)
-app.use('/payment',PaymentRoute)
-app.use('/contactform',ContactFormRoute)
-app.use('/contact',ContactRoute)
-app.use('/abaut',AbautRoute)
-app.use('/product',ProductRoute)
-app.use('/footer',FooterRoute)
-app.use('/productslider',ProductliderRoute)
-app.use('/logo',LogoRouteRoute)
-app.use('/mainpage',MainPageRoute)
-app.use('/login',LoginRoute)
+app.use('/user', RegisterRoute)
+app.use('/payment', PaymentRoute)
+app.use('/contactform', ContactFormRoute)
+app.use('/contact', ContactRoute)
+app.use('/abaut', AbautRoute)
+app.use('/product', ProductRoute)
+app.use('/footer', FooterRoute)
+app.use('/productslider', ProductliderRoute)
+app.use('/logo', LogoRouteRoute)
+app.use('/mainpage', MainPageRoute)
+app.use('/login', LoginRoute)
 
 
 
@@ -143,12 +148,3 @@ app.use(function (err, req, res, next) {
   if (!err.statusCode) err.statusCode = 500;
   res.status(err.statusCode).send(err.message);
 });
-
-
-
-
-
-
-
-
-
