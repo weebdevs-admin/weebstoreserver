@@ -11,21 +11,19 @@ mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connected!'))
 
 
-
+  app.use(cors({
+    origin: '*',  // client manzili
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,  // ma'lumotlarni almashish (cookie, HTTP authentication) yo'qotmagan
+    optionsSuccessStatus: 204,
+    allowedHeaders: 'Content-Type,Authorization',
+  }));
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-app.use(cors({
-  origin: '*',
-  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
-}));
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
