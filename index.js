@@ -8,7 +8,15 @@ const fs = require('fs')
 const port = process.env.PORT
 
 
-app.use(cors({origin: '*'}));
+
+app.use(cors('*'));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('Connected!'))
 
@@ -58,13 +66,6 @@ app.delete('/delete-image/:imageName', (req, res) => {
     }
   });
 });
-
-
-
-
-
-
-
 
 app.use('/uploads', express.static('uploads'));
 
